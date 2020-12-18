@@ -1,10 +1,13 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts"
 import {
   OpenPredict,
   Approval,
   Transfer
 } from "../generated/OpenPredict/OpenPredict"
-import { ExampleEntity } from "../generated/schema"
+import { ExampleEntity, Staking } from "../generated/schema"
+
+const StakingContractAddress = Address.fromString('0x33a48a75d4bbf189b96fe17a72b8ae2162a60203');
+const APY = BigDecimal.fromString("8.5");
 
 export function handleApproval(event: Approval): void {
   // Entities can be loaded from the store using a string ID; this ID
@@ -58,4 +61,17 @@ export function handleApproval(event: Approval): void {
   // - contract.transferFrom(...)
 }
 
-export function handleTransfer(event: Transfer): void {}
+export function handleTransfer(event: Transfer): void {
+
+  // only continue should the Staking contract address be affected.
+  if(!(event.params.to === StakingContractAddress || event.params.from === StakingContractAddress)){
+    return;
+  }
+
+  // Set values
+  let entity   = new Staking(StakingContractAddress.toHexString());
+  let contract = OpenPredict.bind(event.address);
+  entity.APY = APY;
+  entity.TVL = contract.balanceOf(StakingContractAddress);
+  entity.save();
+}
