@@ -1,12 +1,5 @@
-type ExampleEntity @entity {
-  id: ID!
-  count: BigInt!
-  owner: Bytes! # address
-  spender: Bytes! # address
-}
-
 type Staking @entity {
   id: ID!
-  TVL: BigInt!
+  OPT: BigInt!
   APY: BigDecimal!
 }

@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 description: OpenPredict on Ethereum
 schema:
   file: ./schema.graphql
@@ -9,21 +9,18 @@ dataSources:
     source:
       address: "0x4fe5851c9af07df9e5ad8217afae1ea72737ebda"
       abi: OpenPredict
-      startBlock: 10650191
+      startBlock: 11431485
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Approval
         - Transfer
         - Staking
       abis:
         - name: OpenPredict
           file: ./abis/OpenPredict.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mapping.ts
